@@ -7,6 +7,7 @@ A modern Android quiz application built with **Kotlin**, **Jetpack Compose**, an
 ## 🚀 Setup & Run
 
 ### Prerequisites
+
 - **Android Studio** Hedgehog (2023.1.1) or later
 - **JDK** 8 or higher
 - **Android SDK** with API 26+ (minimum) and API 34 (target)
@@ -14,6 +15,7 @@ A modern Android quiz application built with **Kotlin**, **Jetpack Compose**, an
 ### Steps to Build and Run
 
 #### On Emulator
+
 1. **Open the project**
    - Launch Android Studio
    - Click `File → Open`
@@ -41,6 +43,7 @@ A modern Android quiz application built with **Kotlin**, **Jetpack Compose**, an
    - The app will build and launch automatically
 
 #### On Physical Device
+
 1. **Enable Developer Options on your device**
    - Go to `Settings → About Phone`
    - Tap `Build Number` 7 times
@@ -60,6 +63,7 @@ A modern Android quiz application built with **Kotlin**, **Jetpack Compose**, an
    - Click `OK`
 
 #### Build APK (Optional)
+
 ```bash
 # Navigate to project directory
 cd QuizApp
@@ -71,6 +75,7 @@ cd QuizApp
 ```
 
 ### Troubleshooting
+
 - **Gradle sync failed**: Run `./gradlew clean` then rebuild
 - **SDK not found**: Install Android SDK 34 via `Tools → SDK Manager`
 - **App crashes**: Check Logcat for error messages
@@ -81,6 +86,7 @@ cd QuizApp
 ## 🎯 Design Decisions
 
 ### 1. I chose **StateFlow over LiveData** because...
+
 StateFlow is the modern, recommended approach for state management in Jetpack Compose. Unlike LiveData, StateFlow:
 - Integrates seamlessly with Compose without needing `.observeAsState()`
 - Provides better type safety with sealed classes
@@ -95,6 +101,7 @@ val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
 ```
 
 ### 2. I chose **Sealed Classes for UI States over Enums** because...
+
 Sealed classes provide type-safe state representation with associated data, which enums cannot do. This approach:
 - Allows each state to carry different data (Quiz state has timer, Result state has performance)
 - Enables exhaustive `when` expressions that the compiler enforces
@@ -122,6 +129,7 @@ sealed class QuizUiState {
 ```
 
 ### 3. I chose **SavedStateHandle over ViewModel only** because...
+
 SavedStateHandle ensures state survives not just configuration changes (like rotation) but also process death. This provides:
 - Seamless user experience during screen rotation
 - State preservation when the app is killed by the system (low memory)
@@ -144,6 +152,7 @@ class QuizViewModel(
 ```
 
 ### 4. I chose **Repository Pattern over Direct Data Access** because...
+
 The repository pattern abstracts the data source, making the code more flexible and testable:
 - Easy to swap implementations (hardcoded → API → database)
 - ViewModel doesn't need to know where data comes from
@@ -166,6 +175,7 @@ class QuizRepositoryImpl : QuizRepository {
 ```
 
 ### 5. I chose **Jetpack Compose over XML Layouts** because...
+
 Compose is the modern, declarative UI toolkit for Android that offers:
 - Less boilerplate code (no findViewById, no XML)
 - Reactive UI updates automatically when state changes
@@ -184,6 +194,7 @@ fun QuizScreen(state: QuizUiState.Quiz) {
 ```
 
 ### 6. I chose **MVVM Architecture over MVC/MVP** because...
+
 MVVM is Google's recommended architecture for Android apps and provides:
 - Clear separation between UI and business logic
 - ViewModel survives configuration changes automatically
@@ -205,6 +216,7 @@ View (Compose) → ViewModel → Repository → Data Source
 ### What Was Unfamiliar
 
 #### 1. **Sealed Classes**
+
 Coming from Java, sealed classes were a new concept. They restrict class hierarchies to a fixed set of types.
 
 **How I learned:**
@@ -220,6 +232,7 @@ Coming from Java, sealed classes were a new concept. They restrict class hierarc
 Sealed classes are perfect for representing UI states because they ensure all possible states are handled at compile time.
 
 #### 2. **Coroutines and Flow**
+
 Kotlin's approach to asynchronous programming was different from Java's threads and callbacks.
 
 **How I learned:**
@@ -237,6 +250,7 @@ Kotlin's approach to asynchronous programming was different from Java's threads 
 Coroutines make asynchronous code look synchronous and are much easier to read than callbacks. `viewModelScope` automatically cancels coroutines when the ViewModel is cleared.
 
 #### 3. **Extension Properties**
+
 The ability to add computed properties to existing classes without inheritance was new.
 
 **How I learned:**
@@ -257,6 +271,7 @@ val QuizUiState.Quiz.progress: Float
 Extensions keep code clean by adding functionality close to where it's used without modifying the original class.
 
 #### 4. **Data Classes**
+
 Kotlin's data classes automatically generate `equals()`, `hashCode()`, `toString()`, and `copy()`.
 
 **How I learned:**
@@ -271,6 +286,7 @@ Kotlin's data classes automatically generate `equals()`, `hashCode()`, `toString
 Data classes reduce boilerplate significantly and the `copy()` function is perfect for updating immutable state.
 
 #### 5. **Jetpack Compose**
+
 Declarative UI was a paradigm shift from imperative XML layouts.
 
 **How I learned:**
@@ -288,6 +304,7 @@ Declarative UI was a paradigm shift from imperative XML layouts.
 Compose makes UI code more readable and maintainable. The concept of recomposition and state hoisting took time to understand but makes sense now.
 
 #### 6. **Higher-Order Functions and Lambdas**
+
 Kotlin's functional programming features were more powerful than Java's.
 
 **How I learned:**
@@ -302,6 +319,7 @@ Kotlin's functional programming features were more powerful than Java's.
 Lambdas make code more concise and readable, especially for callbacks in Compose.
 
 ### Learning Approach
+
 1. **Read documentation first** - Understood concepts before coding
 2. **Study examples** - Looked at official Android samples
 3. **Incremental implementation** - Built features one at a time
@@ -309,6 +327,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 5. **Code review** - Reviewed my own code to improve structure
 
 ### Key Resources Used
+
 - **Official Kotlin Documentation** - Primary reference
 - **Android Developers Website** - Architecture guides and best practices
 - **Jetpack Compose Documentation** - UI implementation
@@ -321,6 +340,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 ## 🐛 Known Limitations
 
 ### 1. **No Persistence**
+
 **Current:** Quiz history and user progress are not saved. When the app is closed, all data is lost.
 
 **What I would fix:**
@@ -332,6 +352,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 **Why it matters:** Users can't track their progress over time or review previous attempts.
 
 ### 2. **Hardcoded Questions**
+
 **Current:** All 15 questions are hardcoded in `QuizRepository.kt`. No dynamic content.
 
 **What I would fix:**
@@ -343,6 +364,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 **Why it matters:** Limited content variety and no way to update questions without app updates.
 
 ### 3. **No Question Randomization Within Options**
+
 **Current:** Answer options (A, B, C, D) are in a fixed order. Users might memorize positions.
 
 **What I would fix:**
@@ -353,6 +375,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 **Why it matters:** Reduces the effectiveness of the quiz as a learning tool.
 
 ### 4. **Timer Precision**
+
 **Current:** Uses `delay(1000)` which can drift slightly over time due to coroutine scheduling.
 
 **What I would fix:**
@@ -363,6 +386,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 **Why it matters:** Timer might not be exactly 30 seconds, affecting fairness.
 
 ### 5. **No Accessibility Testing**
+
 **Current:** App hasn't been tested with TalkBack or other accessibility services.
 
 **What I would fix:**
@@ -375,6 +399,7 @@ Lambdas make code more concise and readable, especially for callbacks in Compose
 **Why it matters:** App may not be usable for users with disabilities.
 
 ### 6. **No Unit or UI Tests**
+
 **Current:** No automated tests exist for the codebase.
 
 **What I would fix:**
@@ -400,6 +425,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** No automated verification of functionality, making refactoring risky.
 
 ### 7. **No Multi-language Support**
+
 **Current:** All text is hardcoded in English. No internationalization (i18n).
 
 **What I would fix:**
@@ -411,6 +437,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** Limits the app to English-speaking users only.
 
 ### 8. **No User Profiles or Authentication**
+
 **Current:** No way to identify individual users or sync data across devices.
 
 **What I would fix:**
@@ -422,6 +449,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** Can't provide personalized experiences or competitive features.
 
 ### 9. **Limited Error Handling**
+
 **Current:** Basic error handling, no user-friendly error messages.
 
 **What I would fix:**
@@ -433,6 +461,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** App might crash or behave unexpectedly in edge cases.
 
 ### 10. **No Analytics**
+
 **Current:** No tracking of user behavior or app performance.
 
 **What I would fix:**
@@ -445,6 +474,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** Can't make data-driven decisions for improvements.
 
 ### 11. **No Pause/Resume Functionality**
+
 **Current:** Once a quiz starts, it can't be paused. Timer keeps running even if user leaves the app.
 
 **What I would fix:**
@@ -456,6 +486,7 @@ fun `quizScreen displays question`() {
 **Why it matters:** Users might be interrupted and lose their progress.
 
 ### 12. **No Question Categories or Filters**
+
 **Current:** All questions are mixed. Users can't choose specific topics.
 
 **What I would fix:**
@@ -471,6 +502,7 @@ fun `quizScreen displays question`() {
 ## 🎯 Features Implemented
 
 ### Core Features
+
 - ✅ 15 questions across 3 topics (Kotlin, Android, Jetpack Compose)
 - ✅ 30-second timer per question
 - ✅ Immediate feedback (green for correct, red for incorrect)
@@ -481,6 +513,7 @@ fun `quizScreen displays question`() {
 - ✅ Retry functionality
 
 ### Technical Features
+
 - ✅ MVVM architecture with clean separation
 - ✅ StateFlow for reactive state management
 - ✅ SavedStateHandle for configuration change survival
@@ -504,6 +537,7 @@ QuizApp/
 │   ├── presentation/
 │   │   ├── QuizViewModel.kt           # State management
 │   │   ├── QuizUiState.kt             # Sealed UI states
+│   │   ├── HomeScreen.kt              # Home/Welcome screen
 │   │   ├── QuizScreen.kt              # Quiz UI
 │   │   ├── ResultScreen.kt            # Results UI
 │   │   └── QuizViewModelFactory.kt    # ViewModel factory
@@ -551,5 +585,3 @@ Built with modern Android development best practices, demonstrating:
 ---
 
 **Happy Coding! 🚀**
-#   q u i z - a p p  
- 
